@@ -629,6 +629,28 @@ app.delete('/api/billets/:id', async (req, res) => {
   }
 });
 
+// GitHub push endpoint with PAT
+app.post('/api/github/push', async (req, res) => {
+  try {
+    const { token, repoUrl } = req.body;
+    if (!token) {
+      return res.status(400).json({ error: 'Token GitHub requis' });
+    }
+    const targetUrl = repoUrl || 'https://github.com/younesabdeddaim1-droid/gestion_zirara.git';
+    const authUrl = targetUrl.replace('https://', `https://${encodeURIComponent(token)}@`);
+    
+    const { exec } = await import('child_process');
+    const util = await import('util');
+    const execPromise = util.promisify(exec);
+    
+    const { stdout, stderr } = await execPromise(`git push -u "${authUrl}" main:main --force`);
+    res.json({ success: true, message: 'Dépôt poussé avec succès sur GitHub !', output: stdout || stderr });
+  } catch (err: any) {
+    console.error('Git push error:', err);
+    res.status(500).json({ error: err.message || 'Erreur lors du git push' });
+  }
+});
+
 // Setup Vite development server or production build static folder
 const PORT = Number(process.env.PORT) || 3000;
 

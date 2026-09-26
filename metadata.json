@@ -1,0 +1,6 @@
+{
+  "name": "GESTION CENTRE – DEUXIÈME CHANCE – NOUVELLE GÉNÉRATION ZIRARA",
+  "description": "Application de gestion des bénéficiaires, du planning et des absences pour le Centre Deuxième Chance Nouvelle Génération Zirara.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

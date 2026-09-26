@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --navy-deep: #0a1a44;
+    --navy-dark: #071332;
+    --navy-card: #0d1e4c;
+    --turquoise-vibrant: #57e4ff;
+    --turquoise-primary: #02b3bb;
+    --turquoise-light: #e6f9fa;
+    --turquoise-glow: rgba(87, 228, 255, 0.25);
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #0a1a44;
+    background-color: #f8fafc;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  [dir="rtl"] body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Custom modern Canva tech card styles */
+.canva-card {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.canva-card:hover {
+  border-color: rgba(2, 179, 187, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(10, 26, 68, 0.08), 0 8px 10px -6px rgba(2, 179, 187, 0.05);
+}
+
+.canva-card-navy {
+  background: linear-gradient(135deg, #0a1a44 0%, #071332 100%);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(87, 228, 255, 0.2);
+  color: #ffffff;
+}
+
+@media print {
+  /* Hide non-printable elements */
+  nav, header, aside, .no-print, button, .print-hide {
+    display: none !important;
+  }
+  
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-document {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0.8cm;
+  }
+
+  .ticket-container {
+    width: 19cm !important;
+    height: 5cm !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .page-break {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+}

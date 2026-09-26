@@ -1,0 +1,177 @@
+{
+  "collections": {
+    "settings": {
+      "schema": {
+        "nomCentre": "string",
+        "nomCentreAr": "string",
+        "ministereFr": "string",
+        "ministereAr": "string",
+        "academieFr": "string",
+        "academieAr": "string",
+        "directionProvincialeFr": "string",
+        "directionProvincialeAr": "string",
+        "adresse": "string",
+        "adresseAr": "string",
+        "ville": "string",
+        "province": "string",
+        "telephone": "string",
+        "email": "string",
+        "nomDirecteur": "string",
+        "heureDebutJournee": "string",
+        "heureFinJournee": "string",
+        "dureeSeanceMinutes": "number",
+        "seuilConvocationAbsences": "number",
+        "anneeScolaireCourante": "string"
+      }
+    },
+    "users": {
+      "schema": {
+        "id": "string",
+        "email": "string",
+        "codeMassar": "string?",
+        "beneficiaireId": "string?",
+        "password": "string?",
+        "nom": "string?",
+        "prenom": "string?",
+        "nomComplet": "string",
+        "nomCompletAr": "string?",
+        "role": "string",
+        "telephone": "string?",
+        "specialite": "string?",
+        "filiereId": "string?",
+        "classeId": "string?",
+        "filiereIds": "array?",
+        "classeIds": "array?",
+        "statut": "string",
+        "observation": "string?",
+        "avatar": "string?",
+        "permissions": "map?"
+      }
+    },
+    "beneficiaires": {
+      "schema": {
+        "id": "string",
+        "numeroInscription": "string?",
+        "codeMassar": "string",
+        "nomFr": "string",
+        "prenomFr": "string",
+        "nomAr": "string",
+        "prenomAr": "string",
+        "sexe": "string",
+        "dateNaissance": "string",
+        "lieuNaissance": "string",
+        "telephone": "string",
+        "telephone2": "string?",
+        "niveau": "string",
+        "filiereId": "string",
+        "classeId": "string",
+        "statut": "string",
+        "observation": "string",
+        "adresse": "string",
+        "photoUrl": "string?",
+        "dateInscription": "string"
+      }
+    },
+    "filieres": {
+      "schema": {
+        "id": "string",
+        "code": "string",
+        "nomFr": "string",
+        "nomAr": "string",
+        "description": "string?",
+        "statut": "string?"
+      }
+    },
+    "classes": {
+      "schema": {
+        "id": "string",
+        "code": "string",
+        "nomFr": "string",
+        "nomAr": "string",
+        "niveau": "string?",
+        "filiereId": "string",
+        "anneeScolaire": "string",
+        "statut": "string?"
+      }
+    },
+    "seances": {
+      "schema": {
+        "id": "string",
+        "intitule": "string",
+        "intituleAr": "string?",
+        "animateurId": "string",
+        "filiereId": "string",
+        "classeId": "string",
+        "classeIds": "array?",
+        "date": "string",
+        "jour": "string?",
+        "heureDebut": "string",
+        "heureFin": "string",
+        "salle": "string?"
+      }
+    },
+    "absences": {
+      "schema": {
+        "id": "string",
+        "seanceId": "string",
+        "beneficiaireId": "string",
+        "statut": "string",
+        "typeAbsence": "string?",
+        "dureeRetardMinutes": "number?",
+        "statutValidation": "string?",
+        "motifLabel": "string?",
+        "motifId": "string?",
+        "justifie": "boolean",
+        "convoqueAdmin": "boolean",
+        "dateSaisie": "string",
+        "saisiParUserId": "string",
+        "note": "string?"
+      }
+    },
+    "motifs": {
+      "schema": {
+        "id": "string",
+        "code": "string",
+        "libelleFr": "string",
+        "libelleAr": "string",
+        "justifieParDefaut": "boolean"
+      }
+    },
+    "convocations": {
+      "schema": {
+        "id": "string",
+        "beneficiaireId": "string",
+        "seanceId": "string?",
+        "dateConvocation": "string",
+        "motif": "string",
+        "motifAr": "string?",
+        "statut": "string",
+        "creeParUserId": "string",
+        "dateResolution": "string?",
+        "decision": "string?"
+      }
+    },
+    "billets": {
+      "schema": {
+        "id": "string",
+        "absenceId": "string",
+        "seanceId": "string",
+        "beneficiaireId": "string",
+        "nomPrenomFr": "string",
+        "nomPrenomAr": "string?",
+        "codeMassar": "string",
+        "filiereNom": "string",
+        "classeNom": "string",
+        "dateSeance": "string",
+        "heureSeance": "string",
+        "dureeMinutes": "number",
+        "motif": "string",
+        "motifAr": "string?",
+        "dateGeneration": "string",
+        "creeParUserId": "string",
+        "creeParNom": "string?",
+        "statutValidation": "string?"
+      }
+    }
+  }
+}

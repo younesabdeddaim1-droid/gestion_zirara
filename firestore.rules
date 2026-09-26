@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email.matches('.*admin.*') || 
+        request.auth.token.email.matches('.*adm.*') ||
+        request.auth.token.email == 'admin@zirara.ma' ||
+        request.auth.token.email == 'ali-adm@zirara.com' ||
+        request.auth.token.email == 'younesabdeddaim1@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && getUserData().role == 'admin')
+      );
+    }
+    
+    function isAnimateur() {
+      return isAuthenticated() && (
+        request.auth.token.email.matches('.*anim.*') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && getUserData().role == 'animateur')
+      );
+    }
+    
+    function isBeneficiaire() {
+      return isAuthenticated() && (
+        request.auth.token.email.matches('.*ben.*') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && getUserData().role == 'beneficiaire')
+      );
+    }
+
+    // Settings / Parametres
+    match /settings/{document} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    match /parametres/{document} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+    }
+
+    // Beneficiaires
+    match /beneficiaires/{benId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Filieres
+    match /filieres/{filiereId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Classes
+    match /classes/{classeId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Seances / Planning
+    match /seances/{seanceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAnimateur();
+    }
+    match /planning/{planningId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAnimateur();
+    }
+
+    // Absences / Presences
+    match /absences/{absenceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAnimateur();
+    }
+    match /presences/{presenceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAnimateur();
+    }
+
+    // Motifs
+    match /motifs/{motifId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Convocations
+    match /convocations/{convId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Billets
+    match /billets/{billetId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Validations
+    match /validations/{valId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Rapports
+    match /rapports/{rapId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+  }
+}

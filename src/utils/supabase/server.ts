@@ -9,8 +9,8 @@ export const cookies = () => {
   };
 };
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://mcdudiiqjzsnthhbtgbm.supabase.co";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_TksVfQvHDU79LOESKxn-Ag_F47b_bBi";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL || "";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
 
 export const createClient = (cookieStore: any) => {
   return createServerClient(

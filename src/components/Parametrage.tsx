@@ -7,6 +7,7 @@ import { InstitutionalBanner } from './InstitutionalBanner';
 import { GestionUtilisateurs } from './GestionUtilisateurs';
 import { GestionAnimateurs } from './GestionAnimateurs';
 import { ConnexionSupabase } from './ConnexionSupabase';
+import { PushGitHub } from './PushGitHub';
 import {
   Settings,
   Building,
@@ -28,6 +29,7 @@ import {
   X,
   ShieldAlert,
   BookOpen,
+  GitBranch,
   School,
   Search,
   Eye,
@@ -75,7 +77,7 @@ export const Parametrage: React.FC = () => {
   }
 
   // Active Tab in Settings
-  const [activeTab, setActiveTab] = useState<'centre' | 'filieres' | 'classes' | 'animateurs' | 'users' | 'motifs' | 'general' | 'data' | 'supabase'>('centre');
+  const [activeTab, setActiveTab] = useState<'centre' | 'filieres' | 'classes' | 'animateurs' | 'users' | 'motifs' | 'general' | 'data' | 'supabase' | 'github'>('centre');
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Centre Form State
@@ -573,6 +575,19 @@ export const Parametrage: React.FC = () => {
         >
           <Database className="w-4 h-4 text-emerald-400" />
           <span>🔗 Connexion Supabase</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('github')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black transition-all cursor-pointer ${
+            activeTab === 'github'
+              ? 'bg-[#0a1a44] text-white shadow-xs border border-[#57e4ff]/50'
+              : 'text-slate-600 hover:text-[#0a1a44] hover:bg-slate-100'
+          }`}
+        >
+          <GitBranch className="w-4 h-4 text-[#57e4ff]" />
+          <span>🐙 Push GitHub</span>
         </button>
       </div>
 
@@ -1422,6 +1437,9 @@ export const Parametrage: React.FC = () => {
 
       {/* Tab: Connexion Supabase */}
       {activeTab === 'supabase' && <ConnexionSupabase />}
+
+      {/* Tab: Push GitHub */}
+      {activeTab === 'github' && <PushGitHub />}
 
       {/* User Modal */}
       {userModalOpen && (

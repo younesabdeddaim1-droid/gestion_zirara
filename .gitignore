@@ -7,3 +7,4 @@ coverage/
 .env*
 !.env.example
 zirara_repo.bundle
+dev-dist

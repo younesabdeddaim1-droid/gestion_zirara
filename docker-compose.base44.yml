@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: zirara
+      POSTGRES_PASSWORD: zirarapass
+      POSTGRES_DB: zirara
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zirara -d zirara"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: on-failure
+
+  app:
+    image: node:22-bookworm
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      # Local Postgres connection (used by the app at runtime via DATABASE_URL)
+      - DATABASE_URL=postgresql://zirara:zirarapass@db:5432/zirara
+      # Drizzle migration credentials (drizzle.config.ts reads these)
+      - SQL_HOST=db
+      - SQL_DB_NAME=zirara
+      - SQL_ADMIN_USER=zirara
+      - SQL_ADMIN_PASSWORD=zirarapass
+      # Disable Vite HMR/file-watch (intended mode for this project; reload preview after edits)
+      - DISABLE_HMR=true
+      # Preview host allowlisting (platform-provided)
+      - BASE44_PUBLIC_HOST_SUFFIX
+      - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    command:
+      - sh
+      - -ec
+      - |
+        npm install -g bun &&
+        bun install --frozen-lockfile &&
+        npx drizzle-kit push --config=src/db/drizzle.config.ts --force &&
+        exec node_modules/.bin/tsx server.ts
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 90s
+    restart: on-failure
+
+volumes:
+  pgdata:
+  node_modules:

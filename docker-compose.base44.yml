@@ -1,0 +1,69 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_DB: zirara
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zirara_dev_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d zirara"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  migrate:
+    image: oven/bun:1
+    working_dir: /app
+    restart: "no"
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    environment:
+      - DATABASE_URL=postgresql://postgres:zirara_dev_pass@db:5432/zirara
+      - SQL_HOST=db
+      - SQL_DB_NAME=zirara
+      - SQL_ADMIN_USER=postgres
+      - SQL_ADMIN_PASSWORD=zirara_dev_pass
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "-ec", "bun install --frozen-lockfile && bunx drizzle-kit push --config src/db/drizzle.config.ts && echo 'Migrations done'"]
+
+  app:
+    image: oven/bun:1
+    restart: on-failure
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:zirara_dev_pass@db:5432/zirara
+      - DISABLE_HMR=true
+      - BASE44_PUBLIC_HOST_SUFFIX=${BASE44_PUBLIC_HOST_SUFFIX}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\" || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    command: ["sh", "-ec", "bun install --frozen-lockfile && exec bunx tsx server.ts"]
+
+volumes:
+  pgdata:
